@@ -61,3 +61,14 @@
 
 }
 ```
+
+#前端初赛题1
+
+first test [089d9b2b0de6a319.alictf.com/xss.php?name=<script>alert(1)</script>]()
+
+	<body>
+	Hello <script>alert1</script>
+	</body>
+
+
+second test 089d9b2b0de6a319.alictf.com/xss.php?name=<script>!@#$%^&*()_+{}:">?|"[]\;',./</script>
