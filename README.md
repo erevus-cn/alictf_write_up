@@ -64,11 +64,18 @@
 
 #前端初赛题1
 
-first test [089d9b2b0de6a319.alictf.com/xss.php?name=<script>alert(1)</script>]()
-
-	<body>
-	Hello <script>alert1</script>
-	</body>
+利用svg标签里script能执行html hex的特性再urlencode，网站会把urldecode
+>payload:
+>http://089d9b2b0de6a319.alictf.com/xss.php?name=%3Csvg%3E%3Cscript%3E%26%23x61%3b%26%23x6c%3b%26%23x65%3b%26%23x72%3b%26%23x74%3b%26%23x28%3b%26%23x31%3b%26%23x29%3b%3C/script%3E
 
 
-second test 089d9b2b0de6a319.alictf.com/xss.php?name=<script>!@#$%^&*()_+{}:">?|"[]\;',./</script>
+
+#简单业务逻辑
+
+注册用户Admin+若干个空格(猜测后端使用了trim(username)然后insert到了数据库)
+成功注册覆盖掉了Admin的密码  
+![](./jiandanyewuluoji1.png)
+发现钱不够啊，钱不够就得加啊，用负数买个东西就能加钱了
+![](./jiandanyewuluoji2.png)
+钱够了就能买flag了
+
