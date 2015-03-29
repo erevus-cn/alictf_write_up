@@ -85,15 +85,7 @@
 
 下载swf回来反编译一下
 代码是这样
-    //ActionScript 3.0
-    //  class swf
-    package 
-    {
-        import flash.display.*;
-        import flash.events.*;
-        import flash.external.*;
-        import flash.net.*;
-        
+
         public class swf extends flash.display.Sprite
         {
             public function swf()
