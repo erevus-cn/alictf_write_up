@@ -283,12 +283,40 @@ p.s: 审计代码没搞多久，拼接答案搞了半天 o(╯□╰)o。
         return $plain;
     }
 
-我们echo echo decrypt(encrypt($cookie);发现是"Guest"的值  
-猜测后端是 
+那么admin的cookie值就是
+gueset的cookie前32位和后32位异或再和$admin[$i]
+最后拼接上前32位的base64值
 
-	if( md5($cookie)){
-		分配登录角色	
-	}
-	
-decrypt("YzMyazFhN2RjYDE7NDU2NmJnNTc8bWQyZDs9ZGtrMD5TVldWUwIIUgIFBgRUUAJRUQVVVwsHBlBSUFYECgpXVw")^$admin[$i].$plain
+登录后,发现cookie里有个artile里面
+有个i%3A1%3B
+urlencode发现是序列化字符
+写个个脚本进行转换进行注入
 
+	<?	
+	$payload = $_GET['id'];
+	$a[0] = "s:".strlen($payload).":\"".$payload."\"";
+	echo $a[0];	
+	echo "<br>";
+	echo urlencode($a[0]);
+	?>
+union select 1,flag from flag拿到flag
+
+
+#密码宝宝
+
+ 
+运行程序。
+
+Od附加
+
+
+![](密码宝宝.png)
+
+下断点
+
+![](密码宝宝2.png)
+
+单步跟跟跟。
+
+![](密码宝宝3.png)
+![](密码宝宝4.png)
